@@ -39,7 +39,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           ./ci/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner \
-            -Dsonar.projectKey=ton_projet_key \
+            -Dsonar.projectKey=stackcore \
             -Dsonar.sources=. \
-            -Dsonar.host.url=${http://localhost:9000} \
-            -Dsonar.login=${sqp_5fc305631f0e73d435e342d7a998415c7493719b}
+            -Dsonar.host.url=$SONAR_HOST_URL \
+            -Dsonar.login=$SONAR_TOKEN
