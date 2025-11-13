@@ -1,4 +1,4 @@
-name: Analyse SonarQube
+name: Analyse SonarQube (Windows)
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   sonar:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: 🧩 Checkout du code
@@ -28,6 +28,5 @@ jobs:
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          chmod +x ./ci/sonar-scan.sh
-          ./ci/sonar-scan.sh
+        run: .\ci\sonar-scan.bat
+        shell: pwsh
