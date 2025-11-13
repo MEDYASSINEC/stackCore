@@ -170,6 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ?>
                 </td>
                 <td><?= htmlspecialchars($product['price']) ?></td>
+                
                 <td><?= htmlspecialchars($product['stock']) ?></td>
                 <td>
                     <?php
