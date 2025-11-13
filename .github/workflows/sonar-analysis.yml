@@ -29,5 +29,5 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          chmod +x ci/sonar-scan.sh
-          C:\Users\2005062300228\Desktop\htdocs\ci\sonar-scan.sh
+          chmod +x ./ci/sonar-scan.sh
+          ./ci/sonar-scan.sh
