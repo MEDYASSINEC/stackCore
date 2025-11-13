@@ -3,43 +3,31 @@ name: Analyse SonarQube
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
-  sonarcloud:
-    name: Analyse du code avec SonarQube
+  sonar:
     runs-on: ubuntu-latest
 
     steps:
       - name: 🧩 Checkout du code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # requis par SonarQube pour bien analyser l'historique
+          fetch-depth: 0
 
-      - name: ☕ Installer Java (requis pour SonarScanner)
+      - name: ☕ Installer Java
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: ⚙️ Installer SonarScanner
-        run: |
-          mkdir -p ci
-          curl -sSLo ci/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip ci/sonar-scanner.zip -d ci/
-          export PATH="$PATH:$(pwd)/ci/sonar-scanner-5.0.1.3006-linux/bin"
-          sonar-scanner -v
-
-      - name: 🚀 Lancer l’analyse SonarQube
+      - name: 🚀 Lancer le scan SonarQube
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./ci/sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner \
-            -Dsonar.projectKey=stackcore \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN
+          chmod +x ci/sonar-scan.sh
+          ./ci/sonar-scan.sh
