@@ -1,0 +1,32 @@
+name: Analyse SonarQube (Windows)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonar:
+    runs-on: windows-latest
+
+    steps:
+      - name: 🧩 Checkout du code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: ☕ Installer Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17' 
+          distribution: 'temurin'
+
+      - name: 🚀 Lancer le scan SonarQube
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: .\ci\sonar-scan.bat
+        shell: pwsh
