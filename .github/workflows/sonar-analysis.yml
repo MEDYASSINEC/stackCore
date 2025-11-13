@@ -28,5 +28,5 @@ jobs:
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: C:\Users\2005062300228\Desktop\htdocs\ci\sonar-scan.bat
+        run: .\ci\sonar-scan.bat
         shell: pwsh
