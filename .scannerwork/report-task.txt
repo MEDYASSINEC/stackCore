@@ -2,5 +2,5 @@ projectKey=stackcore
 serverUrl=http://localhost:9000
 serverVersion=25.11.0.114957
 dashboardUrl=http://localhost:9000/dashboard?id=stackcore
-ceTaskId=05dd0abc-c248-4430-a770-87129bd50ef4
-ceTaskUrl=http://localhost:9000/api/ce/task?id=05dd0abc-c248-4430-a770-87129bd50ef4
+ceTaskId=0a39cb11-581b-4a51-b58e-4fc5855e2b56
+ceTaskUrl=http://localhost:9000/api/ce/task?id=0a39cb11-581b-4a51-b58e-4fc5855e2b56
