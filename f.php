@@ -1,40 +1,49 @@
 <?php
-// config/database.php
+// config/Database.php
 class Database
 {
     private $host = 'sql203.infinityfree.com';
-    private $db_name = 'if0_39394855_stackcore_db';
+    private $dbName = 'if0_39394855_stackcore_db';
     private $username = 'if0_39394855';
     private $password = 'b1Zogl8tXJXx';
-    public $conn;
+    private $conn;
 
     public function getConnection()
     {
         $this->conn = null;
+
         try {
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $exception) {
-            echo "Erreur de connexion: " . $exception->getMessage();
+            $this->conn = new PDO(
+                "mysql:host={$this->host};dbname={$this->dbName};charset=utf8",
+                $this->username,
+                $this->password,
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+            );
+        } catch (PDOException $e) {
+            // Avoid exposing details in production
+            error_log("Database connection error: " . $e->getMessage());
+            echo "Database connection failed.";
         }
+
         return $this->conn;
     }
 }
+?>
 
+<?php
 // classes/User.php
 class User
 {
     private $conn;
-    private $table_name = "users";
+    private $tableName = "users";
 
     public $id;
-    public $company_name;
+    public $companyName;
     public $email;
-    public $password_hash;
+    public $passwordHash;
     public $address;
     public $phone;
-    public $created_at;
+    public $createdAt;
 
     public function __construct($db)
     {
@@ -43,52 +52,49 @@ class User
 
     public function emailExists()
     {
-        $query = "SELECT id, company_name, email FROM " . $this->table_name . " WHERE email = ? LIMIT 0,1";
+        $query = "SELECT id, company_name, email FROM {$this->tableName} WHERE email = ? LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->email);
         $stmt->execute();
 
-        $num = $stmt->rowCount();
-
-        if ($num > 0) {
+        if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->id = $row['id'];
-            $this->company_name = $row['company_name'];
+            $this->companyName = $row['company_name'];
             return true;
         }
+
         return false;
     }
 
     public function create()
     {
-        $query = "INSERT INTO " . $this->table_name . " 
-                  SET company_name=:company_name, email=:email, password_hash=:password_hash, 
-                      address=:address, phone=:phone";
+        $query = "INSERT INTO {$this->tableName} 
+                  (company_name, email, password_hash, address, phone)
+                  VALUES (:company_name, :email, :password_hash, :address, :phone)";
 
         $stmt = $this->conn->prepare($query);
 
-        // Nettoyer les données
-        $this->company_name = htmlspecialchars(strip_tags($this->company_name));
+        // Sanitize
+        $this->companyName = htmlspecialchars(strip_tags($this->companyName));
         $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->passwordHash = htmlspecialchars(strip_tags($this->passwordHash));
         $this->address = htmlspecialchars(strip_tags($this->address));
         $this->phone = htmlspecialchars(strip_tags($this->phone));
 
-        // Lier les valeurs
-        $stmt->bindParam(":company_name", $this->company_name);
+        // Bind values
+        $stmt->bindParam(":company_name", $this->companyName);
         $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":password_hash", $this->password_hash);
+        $stmt->bindParam(":password_hash", $this->passwordHash);
         $stmt->bindParam(":address", $this->address);
         $stmt->bindParam(":phone", $this->phone);
 
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
 
     public function validatePassword($password)
     {
-        $errors = array();
+        $errors = [];
 
         if (strlen($password) < 8) {
             $errors[] = "Le mot de passe doit contenir au moins 8 caractères";
@@ -113,7 +119,4 @@ class User
         return $errors;
     }
 }
-
-// api/register.php
-
 ?>

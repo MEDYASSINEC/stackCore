@@ -2,15 +2,15 @@
 class User
 {
     private $conn;
-    private $table_name = "users";
+    private $tableName = "users";
 
     public $id;
-    public $company_name;
+    public $companyName;
     public $email;
-    public $password_hash;
+    public $passwordHash;
     public $address;
     public $phone;
-    public $created_at;
+    public $createdAt;
 
     public function __construct($db)
     {
@@ -19,17 +19,15 @@ class User
 
     public function emailExists()
     {
-        $query = "SELECT id, company_name, email FROM " . $this->table_name . " WHERE email = ? LIMIT 0,1";
+        $query = "SELECT id, company_name, email FROM " . $this->tableName . " WHERE email = ? LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->email);
         $stmt->execute();
 
-        $num = $stmt->rowCount();
-
-        if ($num > 0) {
+        if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->id = $row['id'];
-            $this->company_name = $row['company_name'];
+            $this->companyName = $row['company_name'];
             return true;
         }
         return false;
@@ -37,34 +35,32 @@ class User
 
     public function create()
     {
-        $query = "INSERT INTO " . $this->table_name . " 
-                  SET company_name=:company_name, email=:email, password_hash=:password_hash, 
-                      address=:address, phone=:phone";
+        $query = "INSERT INTO " . $this->tableName . " 
+                  (company_name, email, password_hash, address, phone)
+                  VALUES (:company_name, :email, :password_hash, :address, :phone)";
 
         $stmt = $this->conn->prepare($query);
 
-        // Nettoyer les données
-        $this->company_name = htmlspecialchars(strip_tags($this->company_name));
+        // Clean input
+        $this->companyName = htmlspecialchars(strip_tags($this->companyName));
         $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->passwordHash = htmlspecialchars(strip_tags($this->passwordHash));
         $this->address = htmlspecialchars(strip_tags($this->address));
         $this->phone = htmlspecialchars(strip_tags($this->phone));
 
-        // Lier les valeurs
-        $stmt->bindParam(":company_name", $this->company_name);
+        // Bind parameters
+        $stmt->bindParam(":company_name", $this->companyName);
         $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":password_hash", $this->password_hash);
+        $stmt->bindParam(":password_hash", $this->passwordHash);
         $stmt->bindParam(":address", $this->address);
         $stmt->bindParam(":phone", $this->phone);
 
-        if ($stmt->execute()) {
-            return true;
-        }
-        return false;
+        return $stmt->execute();
     }
 
     public function validatePassword($password)
     {
-        $errors = array();
+        $errors = [];
 
         if (strlen($password) < 8) {
             $errors[] = "Le mot de passe doit contenir au moins 8 caractères";
