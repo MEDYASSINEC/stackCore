@@ -3,6 +3,7 @@
 # Script pour lancer l'analyse SonarQube
 
 # 💡 Arrêter le script si une commande échoue
+echo "🚀 Démarrage de l'analyse SonarQube..."
 set -e
 
 # Variables SonarQube – à adapter
