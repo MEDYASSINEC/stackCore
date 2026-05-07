@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { prisma } from '../../../lib/prisma';
 import { productSchema } from '../../../services/validation';
 import { apiError } from '../../../utils/errors';
-import { requireAuth } from '../../../middlewares/auth';
+import { HttpError, requireAuth } from '../../../middlewares/auth';
 import { requireRole } from '../../../middlewares/rbac';
 
 export const GET: APIRoute = async () => {
@@ -17,7 +17,8 @@ export const POST: APIRoute = async (ctx) => {
     const body = productSchema.parse(await ctx.request.json());
     const product = await prisma.product.create({ data: body });
     return new Response(JSON.stringify(product), { status: 201 });
-  } catch {
-    return apiError('Unauthorized or invalid product payload', 403);
+  } catch (error) {
+    if (error instanceof HttpError) return apiError(error.message, error.status);
+    return apiError('Unauthorized or invalid product payload', 400);
   }
 };
