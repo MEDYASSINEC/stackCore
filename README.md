@@ -1,43 +1,51 @@
-# Astro Starter Kit: Minimal
+# StackCore
 
-```sh
-npm create astro@latest -- --template minimal
+Application e-commerce professionnelle Astro + API REST intégrée.
+
+## Stack
+- Astro + TypeScript + TailwindCSS
+- PostgreSQL + Prisma ORM
+- JWT + bcrypt + Zod
+- RBAC (Admin, Client, Supplier)
+
+## Structure
+- `src/components`
+- `src/layouts`
+- `src/pages`
+- `src/pages/api`
+- `src/services`
+- `src/middlewares`
+- `src/lib`
+- `src/types`
+- `src/utils`
+
+## Installation
+```bash
+npm install
+cp .env.example .env
+npm run prisma:generate
+npm run prisma:migrate
+npm run prisma:seed
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Docker (ready)
+Exemple de `DATABASE_URL` pointant vers un service postgres docker.
 
-## 🚀 Project Structure
+## Endpoints principaux
+- `POST /api/auth/register`
+- `GET/POST /api/products`
+- `GET /api/orders`
+- `POST /api/recycling`
+- `GET /api/dashboard/kpis`
 
-Inside of your Astro project, you'll see the following folders and files:
+## Sécurité incluse
+- Hash mot de passe bcrypt
+- Validation Zod
+- Middleware auth JWT
+- Middleware RBAC
+- Isolation des routes API sensibles
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Notes
+- Stripe peut être intégré via `STRIPE_SECRET_KEY` (mock par défaut).
+- Upload images: prévoir adaptateur S3/Cloudinary en production.

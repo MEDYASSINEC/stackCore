@@ -1,17 +1,23 @@
 ---
-
+import MainLayout from '../layouts/MainLayout.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="StackCore | E-commerce durable">
+  <Header />
+  <main class="mx-auto max-w-7xl space-y-10 p-6">
+    <section class="rounded-2xl bg-gradient-to-r from-ecoGreen to-deepBlue p-8 text-white">
+      <h2 class="text-3xl font-bold">E-commerce performant, sécurisé et durable</h2>
+      <p class="mt-2">Astro + API REST + Prisma + PostgreSQL + RBAC.</p>
+    </section>
+    <section id="dashboard" class="grid gap-6 lg:grid-cols-[16rem,1fr]">
+      <Sidebar />
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <article class="rounded-xl border p-4"><h3>CA</h3><p class="text-2xl font-bold">€182K</p></article>
+        <article class="rounded-xl border p-4"><h3>Commandes</h3><p class="text-2xl font-bold">2,430</p></article>
+        <article class="rounded-xl border p-4"><h3>Recyclage</h3><p class="text-2xl font-bold">312</p></article>
+        <article class="rounded-xl border p-4"><h3>Fidélité</h3><p class="text-2xl font-bold">89%</p></article>
+      </div>
+    </section>
+  </main>
+</MainLayout>

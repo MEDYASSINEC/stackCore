@@ -1,0 +1,5 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body { @apply bg-white text-deepBlue dark:bg-slate-900 dark:text-slate-50; }
