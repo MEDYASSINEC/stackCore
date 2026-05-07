@@ -1,25 +1,36 @@
 # StackCore
 
-Application e-commerce professionnelle Astro + API REST intégrée.
+Plateforme e-commerce durable et professionnelle, construite avec **Astro + TypeScript** et une API REST intégrée.
 
-## Stack
-- Astro + TypeScript + TailwindCSS
-- PostgreSQL + Prisma ORM
-- JWT + bcrypt + Zod
-- RBAC (Admin, Client, Supplier)
+## Fonctionnalités
+- Authentification JWT (access + refresh), hash bcrypt, validation Zod
+- RBAC avancé: **Admin**, **Client**, **Fournisseur**
+- Catalogue produits: CRUD, recherche, filtres, pagination
+- Commandes: checkout + paiement simulé
+- Recyclage: création de demandes, suivi, points fidélité
+- Dashboard KPI pour administration
+- Design responsive moderne (Tailwind, dark mode)
+- SEO: sitemap + robots.txt
 
-## Structure
-- `src/components`
-- `src/layouts`
-- `src/pages`
-- `src/pages/api`
-- `src/services`
-- `src/middlewares`
-- `src/lib`
-- `src/types`
-- `src/utils`
+## Architecture
+```
+src/
+  components/
+  layouts/
+  pages/
+    api/
+  services/
+  middlewares/
+  lib/
+  types/
+  utils/
+```
 
-## Installation
+## Prérequis
+- Node.js >= 22.12
+- PostgreSQL 15+
+
+## Installation rapide
 ```bash
 npm install
 cp .env.example .env
@@ -29,23 +40,34 @@ npm run prisma:seed
 npm run dev
 ```
 
-## Docker (ready)
-Exemple de `DATABASE_URL` pointant vers un service postgres docker.
+## Docker
+```bash
+docker compose up -d
+```
+
+## Scripts utiles
+- `npm run dev` : développement
+- `npm run build` : build production
+- `npm run check` : vérification Astro/TS
+- `npm run prisma:generate`
+- `npm run prisma:migrate`
+- `npm run prisma:seed`
 
 ## Endpoints principaux
 - `POST /api/auth/register`
-- `GET/POST /api/products`
-- `GET /api/orders`
-- `POST /api/recycling`
+- `POST /api/auth/login`
+- `POST /api/auth/refresh`
+- `GET|POST /api/products`
+- `GET|POST /api/orders`
+- `GET|POST /api/recycling`
 - `GET /api/dashboard/kpis`
 
-## Sécurité incluse
-- Hash mot de passe bcrypt
-- Validation Zod
-- Middleware auth JWT
-- Middleware RBAC
-- Isolation des routes API sensibles
+## Sécurité
+- Validation systématique backend (Zod)
+- Contrôle d'accès rôle par rôle
+- Hash des mots de passe
+- JWT signés + rotation via refresh token
+- Messages d'erreur API homogènes
 
-## Notes
-- Stripe peut être intégré via `STRIPE_SECRET_KEY` (mock par défaut).
-- Upload images: prévoir adaptateur S3/Cloudinary en production.
+## Variables d'environnement
+Voir `.env.example`.
