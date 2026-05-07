@@ -1,0 +1,7 @@
+---
+import MainLayout from '../layouts/MainLayout.astro'; import Header from '../components/Header.astro';
+---
+<MainLayout title="Profil | StackCore"><Header /><main class="mx-auto max-w-5xl p-6"><h1 class="text-3xl font-bold">Espace utilisateur</h1><section class="mt-4 grid gap-4 md:grid-cols-3"><article class="premium-card p-4"><h2 class="font-semibold">Points fidélité</h2><p id="points" class="text-3xl font-bold text-eco-green">-</p></article><article class="premium-card p-4 md:col-span-2"><h2 class="font-semibold">Commandes</h2><div id="orders"></div></article></section><section class="premium-card mt-4 p-4"><h2 class="font-semibold">Demandes de recyclage</h2><div id="recycling"></div></section></main></MainLayout>
+<script>
+const auth=JSON.parse(localStorage.getItem('stackcore-auth')||'{}')?.state;async function load(){const h={'authorization':`Bearer ${auth?.accessToken||''}`};const [p,o,r]=await Promise.all([fetch('/api/profile',{headers:h}),fetch('/api/orders',{headers:h}),fetch('/api/recycling',{headers:h})]);const pd=await p.json();const od=await o.json();const rd=await r.json();document.getElementById('points').textContent=String(pd.data?.loyaltyPoints ?? 0);document.getElementById('orders').innerHTML=(od.data||[]).map(x=>`<div class='border-b py-2'>${x.id} - ${x.status} - €${x.total}</div>`).join('')||'Aucune commande';document.getElementById('recycling').innerHTML=(rd.data||[]).map(x=>`<div class='border-b py-2'>${x.description} - <strong>${x.status}</strong> (+${x.rewardPoints})</div>`).join('')||'Aucune demande';} load();
+</script>

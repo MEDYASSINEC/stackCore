@@ -1,5 +1,56 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-bg: #f3f7fb;
+  --color-surface: #ffffffcc;
+  --color-surface-strong: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #475569;
+  --color-eco-green: #16a34a;
+  --color-deep-blue: #1e3a8a;
+}
+
+.dark {
+  --color-bg: #020617;
+  --color-surface: #0f172abf;
+  --color-surface-strong: #0f172a;
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-eco-green: #4ade80;
+  --color-deep-blue: #60a5fa;
+}
+
+@theme {
+  --color-eco-green: var(--color-eco-green);
+  --color-deep-blue: var(--color-deep-blue);
+}
+
 body {
-  @apply bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-50;
+  background: radial-gradient(circle at top, color-mix(in oklab, var(--color-eco-green) 10%, var(--color-bg)) 0%, var(--color-bg) 55%);
+  color: var(--color-text);
+  min-height: 100vh;
+}
+
+.glass {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in oklab, white 35%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.dark .glass {
+  border-color: color-mix(in oklab, var(--color-deep-blue) 20%, #ffffff1f);
+}
+
+.premium-card {
+  @apply glass rounded-2xl shadow-xl shadow-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-eco-green to-deep-blue px-4 py-2.5 font-semibold text-white transition-transform duration-200 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eco-green;
+}
+
+.input-premium {
+  @apply w-full rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2.5 text-slate-800 shadow-sm transition focus:border-eco-green focus:outline-none dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100;
 }

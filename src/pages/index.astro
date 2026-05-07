@@ -3,20 +3,21 @@ import MainLayout from '../layouts/MainLayout.astro';
 import Header from '../components/Header.astro';
 import Sidebar from '../components/Sidebar.astro';
 ---
-<MainLayout title="StackCore | E-commerce durable">
+<MainLayout title="StackCore | E-commerce durable" description="StackCore, plateforme e-commerce durable premium.">
   <Header />
   <main class="mx-auto max-w-7xl space-y-10 p-6">
-    <section class="rounded-2xl bg-gradient-to-r from-ecoGreen to-deepBlue p-8 text-white">
-      <h2 class="text-3xl font-bold">E-commerce performant, sécurisé et durable</h2>
-      <p class="mt-2">Astro + API REST + Prisma + PostgreSQL + RBAC.</p>
+    <section class="premium-card rounded-3xl bg-gradient-to-r from-eco-green/90 to-deep-blue/90 p-8 text-white">
+      <h1 class="text-3xl font-bold">E-commerce durable, premium et performant</h1>
+      <p class="mt-3 text-white/90">Une expérience moderne propulsée par Astro SSR, Prisma et Tailwind CSS v4.</p>
+      <a class="btn-primary mt-5" href="/products">Explorer le catalogue</a>
     </section>
     <section id="dashboard" class="grid gap-6 lg:grid-cols-[16rem,1fr]">
       <Sidebar />
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <article class="rounded-xl border p-4"><h3>CA</h3><p class="text-2xl font-bold">€182K</p></article>
-        <article class="rounded-xl border p-4"><h3>Commandes</h3><p class="text-2xl font-bold">2,430</p></article>
-        <article class="rounded-xl border p-4"><h3>Recyclage</h3><p class="text-2xl font-bold">312</p></article>
-        <article class="rounded-xl border p-4"><h3>Fidélité</h3><p class="text-2xl font-bold">89%</p></article>
+        <article class="premium-card p-4"><h2>CA</h2><p class="text-2xl font-bold">€182K</p></article>
+        <article class="premium-card p-4"><h2>Commandes</h2><p class="text-2xl font-bold">2,430</p></article>
+        <article class="premium-card p-4"><h2>Recyclage</h2><p class="text-2xl font-bold">312</p></article>
+        <article class="premium-card p-4"><h2>Fidélité</h2><p class="text-2xl font-bold">89%</p></article>
       </div>
     </section>
   </main>
