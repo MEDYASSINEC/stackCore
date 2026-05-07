@@ -1,0 +1,60 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+
+enum Role { ADMIN CLIENT SUPPLIER }
+enum OrderStatus { PENDING PAID SHIPPED DELIVERED CANCELED }
+enum RecyclingStatus { SUBMITTED REVIEWED APPROVED REWARDED REJECTED }
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  passwordHash String
+  role Role @default(CLIENT)
+  loyaltyPoints Int @default(0)
+  orders Order[]
+  recyclingRequests RecyclingRequest[]
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id String @id @default(cuid())
+  name String
+  description String
+  price Float
+  stock Int
+  imageUrl String?
+  category String?
+  orderItems OrderItem[]
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  status OrderStatus @default(PENDING)
+  total Float @default(0)
+  items OrderItem[]
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+  orderId String
+  productId String
+  quantity Int
+  unitPrice Float
+  order Order @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model RecyclingRequest {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  description String
+  photoUrl String
+  status RecyclingStatus @default(SUBMITTED)
+  rewardPoints Int @default(0)
+  createdAt DateTime @default(now())
+}
