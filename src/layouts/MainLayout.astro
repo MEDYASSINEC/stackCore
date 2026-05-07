@@ -1,15 +1,15 @@
 ---
 import '../styles/global.css';
-const { title = 'StackCore' } = Astro.props;
+const { title = 'StackCore', description = 'Plateforme e-commerce StackCore durable' } = Astro.props;
 ---
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="Plateforme e-commerce StackCore" />
+    <meta name="description" content={description} />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="antialiased">
     <slot />
   </body>
 </html>
