@@ -1,0 +1,48 @@
+---
+interface Props {
+  id: string;
+  slug: string;
+  name: string;
+  brand?: string;
+  price: number;
+  originalPrice?: number;
+  image?: string;
+  reviewCount?: number;
+  rating?: number;
+  inStock?: boolean;
+  isNew?: boolean;
+  isEco?: boolean;
+}
+
+const { id, slug, name, brand = 'STACKCORE', price, originalPrice, image = '/favicon.svg', reviewCount = 0, rating = 4, inStock = true, isNew = false, isEco = false } = Astro.props;
+---
+<article class="stack-panel group relative flex h-full flex-col p-2 shadow-sm transition-all hover:border-[var(--cu-primary)] hover:shadow">
+  <div class="absolute left-2 top-2 z-10 flex flex-col gap-1">
+    {isNew && <span class="rounded bg-[var(--cu-badge-new)] px-1.5 py-0.5 text-[10px] text-white">NOUVEAU</span>}
+    {isEco && <span class="rounded bg-[var(--cu-badge-eco)] px-1.5 py-0.5 text-[10px] text-white">♻️ ÉCO</span>}
+  </div>
+
+  <a href={`/products?slug=${slug}`} class="block">
+    <div class="flex h-[160px] items-center justify-center overflow-hidden p-2">
+      <img src={image} alt={name} class="max-h-full max-w-full object-contain transition-transform group-hover:scale-105" loading="lazy" />
+    </div>
+  </a>
+
+  <div class="mt-1 flex flex-1 flex-col gap-1">
+    <span class="text-[11px] uppercase tracking-wide text-[var(--cu-text-muted)]">{brand}</span>
+    <h3 class="line-clamp-2 text-[12px] font-semibold leading-snug text-[var(--cu-text-primary)]">{name}</h3>
+    <div class="mt-auto flex items-center gap-1 text-[11px] text-yellow-500">
+      {'★'.repeat(Math.round(rating))}{'☆'.repeat(5 - Math.round(rating))}
+      <span class="text-[10px] text-[var(--cu-text-muted)]">({reviewCount})</span>
+    </div>
+    <div>
+      {originalPrice && <span class="block text-[11px] text-[var(--cu-text-muted)] line-through">{originalPrice.toFixed(2)} MAD</span>}
+      <span class={`text-[16px] font-bold ${originalPrice ? 'text-[var(--cu-price)]' : 'text-[var(--cu-text-primary)]'}`}>{price.toFixed(2)} MAD</span>
+    </div>
+    {inStock ? (
+      <button class="stack-btn stack-btn--cta mt-1 w-full" data-product-id={id}>🛒 Ajouter au panier</button>
+    ) : (
+      <span class="mt-1 block rounded border border-red-200 bg-red-50 py-1 text-center text-[11px] text-red-500">Rupture de stock</span>
+    )}
+  </div>
+</article>
