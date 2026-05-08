@@ -1,9 +1,34 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import Header from '../components/Header.astro';
+import ProductCard from '../components/ProductCard.astro';
+
+const showcase = [
+  { id: '1', slug: 'pc-gamer-r5', name: 'PC Gamer Ryzen 5 / RTX 4060 / 16Go RAM', brand: 'MSI', price: 11999, originalPrice: 12999, isNew: true, reviewCount: 124, rating: 4.5 },
+  { id: '2', slug: 'laptop-pro-14', name: 'Laptop Pro 14” i7 13e Gen / 32Go / 1To SSD', brand: 'Lenovo', price: 13990, reviewCount: 89, rating: 4.1 },
+  { id: '3', slug: 'iphone-reconditionne', name: 'iPhone 13 Reconditionné Grade A 128Go', brand: 'Apple', price: 6290, originalPrice: 6990, isEco: true, reviewCount: 52, rating: 4.7 },
+  { id: '4', slug: 'ecran-27-165hz', name: 'Écran 27" QHD 165Hz IPS Gaming', brand: 'AOC', price: 2790, reviewCount: 34, rating: 4.0 },
+  { id: '5', slug: 'ssd-1to-nvme', name: 'SSD NVMe PCIe 4.0 1To Haute Performance', brand: 'Kingston', price: 890, isNew: true, reviewCount: 18, rating: 4.4 },
+  { id: '6', slug: 'smartphone-local', name: 'Smartphone Android 5G Edition Maroc', brand: 'Infinix', price: 3290, isEco: true, reviewCount: 11, rating: 3.9 }
+];
 ---
-<MainLayout title="Catalogue | StackCore"><Header /><main class="mx-auto max-w-7xl p-6"><section class="premium-card p-5"><h1 class="text-3xl font-bold">Catalogue</h1><div class="mt-4 grid gap-3 sm:grid-cols-3"><input id="q" class="input-premium" placeholder="Recherche en temps réel"/><input id="category" class="input-premium" placeholder="Catégorie"/><button id="search" class="btn-primary">Filtrer</button></div></section><section id="list" class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></section><div class="mt-4 flex justify-between"><button id="prev" class="btn-primary">Précédent</button><button id="next" class="btn-primary">Suivant</button></div></main></MainLayout>
-<script>
-let page=1;async function load(){const q=document.getElementById('q').value;const category=document.getElementById('category').value;const res=await fetch(`/api/products?page=${page}&limit=6&q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}`);const {data,meta}=await res.json();document.getElementById('list').innerHTML=data.map(p=>`<article class='premium-card p-4'><h2 class='font-semibold'>${p.name}</h2><p class='text-sm text-slate-500'>${p.description}</p><p class='mt-2 font-bold'>€${p.price}</p><button data-id='${p.id}' data-name='${p.name}' data-price='${p.price}' class='btn-primary mt-3 w-full add'>Ajouter</button></article>`).join('');document.querySelectorAll('.add').forEach(b=>b.addEventListener('click',()=>{const cart=JSON.parse(localStorage.getItem('stackcore-cart')||'{"state":{"items":[]},"version":0}');const item={productId:b.dataset.id,name:b.dataset.name,price:Number(b.dataset.price),quantity:1};const found=cart.state.items.find(i=>i.productId===item.productId);if(found){found.quantity+=1;}else{cart.state.items.push(item);}localStorage.setItem('stackcore-cart',JSON.stringify(cart));}));document.getElementById('prev').disabled=page<=1;document.getElementById('next').disabled=page>=meta.totalPages;}
-document.getElementById('search').addEventListener('click',()=>{page=1;load();});document.getElementById('q').addEventListener('input',()=>{page=1;load();});document.getElementById('prev').addEventListener('click',()=>{page--;load();});document.getElementById('next').addEventListener('click',()=>{page++;load();});load();
-</script>
+<MainLayout title="Catalogue | StackCore">
+  <Header />
+  <main class="stack-shell py-5">
+    <section class="stack-panel p-3">
+      <div class="mb-3 flex items-center justify-between">
+        <h1 class="text-[18px] font-bold">Catalogue StackCore</h1>
+        <span class="text-[12px] text-[var(--cu-text-secondary)]">6 produits en démo</span>
+      </div>
+      <div class="grid gap-2 sm:grid-cols-[1fr,1fr,auto]">
+        <input id="q" class="stack-input" placeholder="Recherche en temps réel" />
+        <input id="category" class="stack-input" placeholder="Catégorie" />
+        <button id="search" class="stack-btn stack-btn--cta">Filtrer</button>
+      </div>
+    </section>
+
+    <section id="list" class="mt-3 grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6">
+      {showcase.map((product) => <ProductCard {...product} />)}
+    </section>
+  </main>
+</MainLayout>

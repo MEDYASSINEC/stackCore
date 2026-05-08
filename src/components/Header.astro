@@ -1,20 +1,40 @@
-<header class="sticky top-0 z-30 border-b border-white/40 bg-white/60 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-950/65">
-  <nav class="mx-auto flex max-w-7xl items-center justify-between p-4">
-    <a href="/" class="text-xl font-bold text-eco-green">StackCore</a>
-    <div class="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-300">
-      <a href="/products" class="hover:text-eco-green">Produits</a>
-      <a href="/recycling/new" class="hover:text-eco-green">Recyclage</a>
-      <a href="/profile" class="hover:text-eco-green">Profil</a>
-      <button id="theme-toggle" class="rounded-lg border px-2 py-1 text-xs">🌗</button>
+<header class="sticky top-0 z-30">
+  <div class="bg-[var(--cu-nav-bg)] py-1 text-[11px] text-[var(--cu-nav-text)]">
+    <div class="stack-shell flex items-center justify-between gap-3">
+      <span>📞 +212 5XX-XXXXXX | ✉ contact@stackcore.ma</span>
+      <div class="flex gap-3">
+        <span>🚚 Livraison 24-48h</span>
+        <span>🇲🇦 MAD | 🇫🇷 FR</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-[var(--cu-border)] bg-white py-3">
+    <div class="stack-shell flex items-center gap-4">
+      <a href="/" class="shrink-0 text-[24px] font-bold text-[var(--cu-primary)]">StackCore</a>
+      <form action="/products" class="flex flex-1">
+        <input
+          type="text"
+          name="q"
+          class="w-full rounded-l border border-r-0 border-[#cfcfcf] px-3 py-2 text-[13px] outline-none focus:border-[var(--cu-primary)]"
+          placeholder="Rechercher un produit, une marque..."
+        />
+        <button class="stack-btn stack-btn--cta rounded-l-none">Rechercher</button>
+      </form>
+      <nav class="flex items-center gap-4 text-[11px] text-[var(--cu-text-secondary)]">
+        <a href="/profile" class="hover:text-[var(--cu-primary)]">👤 Mon compte</a>
+        <a href="/checkout" class="relative hover:text-[var(--cu-primary)]">🛒 Panier <span class="absolute -right-3 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">0</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <nav class="bg-[var(--cu-primary)] py-2 text-[12px] font-semibold text-white">
+    <div class="stack-shell flex flex-wrap items-center gap-5">
+      <a href="/products" class="hover:underline">Composants PC</a>
+      <a href="/products" class="hover:underline">Gaming</a>
+      <a href="/products" class="hover:underline">Smartphones</a>
+      <a href="/products" class="hover:underline">Reconditionné</a>
+      <a href="/products" class="hover:underline">Promotions</a>
     </div>
   </nav>
 </header>
-<script>
-  const root = document.documentElement;
-  const stored = localStorage.getItem('theme');
-  if (stored === 'dark') root.classList.add('dark');
-  document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    root.classList.toggle('dark');
-    localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
-  });
-</script>
