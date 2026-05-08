@@ -1,62 +1,92 @@
 # Audit d'écart — StackCore vs documentation "AI BUILD INSTRUCTIONS"
 
-Date d'audit: 2026-05-08
+Date d'audit: 2026-05-08 (UTC)
 
-## Résumé
+## Résumé exécutif
 
-- **Globalement appliqué partiellement**: le projet contient une base Astro + API + auth JWT/Prisma, mais il est **loin** de la cible décrite (Supabase SSR, nanostores, architecture pages/composants complète, paiements Stripe+CMI, recherche Meili/Algolia, etc.).
-- **Constat principal**: l'implémentation actuelle correspond davantage à un MVP REST Astro/Prisma qu'au blueprint e-commerce StackCore complet.
+Le projet actuel est un **MVP Astro + Prisma + JWT + Zustand**, alors que la documentation cible décrit une plateforme **Astro SSR orientée Supabase + Nanostores + Stripe/CMI + Meili/Algolia + Resend**, avec une architecture de pages/composants beaucoup plus large.
 
-## Écarts majeurs (NON appliqué)
+➡️ Conclusion: la base actuelle est utilisable, mais **une grande partie de la documentation n'est pas encore appliquée**.
+
+---
+
+## Vérification par bloc
 
 ## 1) Stack technique
-- Supabase (Auth, DB, Storage, RLS): **non appliqué** (stack actuelle Prisma + JWT).
-- Nanostores: **non appliqué** (stores Zustand persist).
-- DaisyUI: **non appliqué**.
-- Stripe + CMI/PayZone: **non appliqué** (checkout présent mais sans intégration documentée).
-- MeiliSearch/Algolia: **non appliqué**.
-- Resend: **non appliqué**.
-- Adapter SSR Astro `output: 'server'` + `@astrojs/node`: **non appliqué**.
 
-## 2) Architecture Astro attendue
-- Layouts attendus `BaseLayout`, `ShopLayout`, `DashboardLayout`: **non appliqué** (seul `MainLayout`).
-- Sous-dossiers composants `ui/`, `navigation/`, `product/`, `catalog/`, `cart/`, `home/`, `admin/`: **non appliqué**.
-- Routes publiques prévues (`catalogue`, `produit/[slug]`, `panier`, `compte/*`, `admin/*`, `blog/*`, etc.): **majoritairement non appliqué**.
+- **AstroJS SSR `output: 'server'` + adapter Node**: ❌ non appliqué.
+  - `astro.config.mjs` ne configure ni `output: 'server'` ni `@astrojs/node`, seulement Tailwind Vite plugin.
+- **Supabase (Auth, DB, Storage, RLS)**: ❌ non appliqué.
+  - Les dépendances et le code montrent Prisma/JWT, pas de client Supabase.
+- **Nanostores**: ❌ non appliqué.
+  - Le panier est géré via Zustand persist.
+- **DaisyUI**: ❌ non appliqué.
+  - Aucune dépendance DaisyUI détectée.
+- **Stripe + CMI/PayZone**: ❌ non appliqué.
+  - Aucune dépendance Stripe/CMI et aucun service checkout correspondant.
+- **MeiliSearch/Algolia**: ❌ non appliqué.
+  - Aucune dépendance ou lib search dédiée.
+- **Resend**: ❌ non appliqué.
+  - Aucune dépendance ou module email transactionnel.
 
-## 3) UI "computeruniverse" demandée
-- Topbar + Main Nav + Mega menu 3 niveaux: **non appliqué**.
-- Grille catalogue dense 5-6 colonnes desktop + sidebar filtres fixe: **non appliqué**.
-- Système de variables CSS proposé (`variables.css`) et conventions visuelles détaillées: **partiellement non appliqué**.
+## 2) Architecture fichiers/pages
 
-## 4) Base de données attendue
-- Schéma Supabase complet (profiles, addresses, categories, suppliers, promotions, blog_posts, notifications, etc.): **non appliqué**.
-- Modèle actuel différent (Prisma local `dev.db`) et couverture fonctionnelle inférieure au schéma cible.
+- **Layouts attendus** (`BaseLayout`, `ShopLayout`, `DashboardLayout`): ❌ non appliqué.
+  - Le repo expose `MainLayout.astro` uniquement.
+- **Organisation composants par domaines** (`ui/`, `navigation/`, `product/`, `catalog/`, `cart/`, etc.): ❌ non appliqué.
+  - Les composants sont plats (`Header`, `Sidebar`, `ProductCard`).
+- **Pages demandées** (`/catalogue`, `/produit/[slug]`, `/panier`, `/compte/*`, `/admin/*`, `/blog/*`, etc.): ⚠️ partiellement appliqué.
+  - Des pages existent (`/products`, `/checkout`, `/profile`, auth), mais la structure URL demandée n'est pas alignée.
 
-## 5) Flux métier avancés
-- Middleware Astro avec session Supabase + protection `/admin` & `/compte`: **non appliqué** (middleware custom JWT côté API).
-- Recyclage avec upload Storage et workflow complet: **partiellement non appliqué**.
-- Dropshipping automatique fournisseur: **non appliqué**.
-- Programme fidélité tiers/règles complet: **partiellement non appliqué**.
-- Notifications transactionnelles et emails Resend: **non appliqué**.
+## 3) UI / style computeruniverse
 
-## 6) Production & observabilité
-- Monitoring Sentry: **non appliqué**.
-- Optimisation images (Cloudinary/Supabase + sharp pipeline): **non appliqué / partiel**.
-- Déploiement documenté Vercel/Netlify Edge: **non appliqué**.
+- **Topbar + main nav + menu catégorie**: ✅ partiellement appliqué.
+  - `Header.astro` contient déjà une topbar, une recherche centrale, et une barre catégories.
+- **Densité compacte stricte (tailles, spacing, radius max 4px, grille 5-6 colonnes)**: ⚠️ partiellement appliqué.
+  - Le home utilise encore des sections “premium” et de gros arrondis (`rounded-3xl`) contraires aux règles compactes.
+- **Système CSS complet (`variables.css`, `components.css`)**: ❌ non appliqué tel que documenté.
+  - Seul `global.css` est présent.
 
-## Ce qui semble appliqué (ou partiellement)
+## 4) Données & modèle métier
 
-- Astro + Tailwind présents.
-- API backend structurée (`auth`, `products`, `orders`, `recycling`, `dashboard`).
-- Authentification avec JWT + RBAC (mais différente de Supabase Auth).
-- Page de recyclage et section profil/fidélité existantes en base.
+- **Schéma PostgreSQL Supabase complet (profiles, addresses, suppliers, promotions, blog_posts, notifications, etc.)**: ❌ non appliqué.
+  - Le projet utilise Prisma SQLite local (`prisma/dev.db`) avec modèle différent.
+- **RLS + auth middleware Supabase**: ❌ non appliqué.
+  - Auth basée JWT custom.
 
-## Priorités recommandées pour alignement
+## 5) Fonctionnalités critiques
 
-1. **Décider la stack source de vérité**: garder Prisma/JWT ou migrer vers Supabase (doc cible = Supabase).
-2. Mettre à jour `astro.config.mjs` vers SSR server + adapter node.
-3. Introduire l'architecture de dossiers/pages cible (navigation, catalogue, produit, compte, admin, blog).
-4. Implémenter d'abord les composants critiques: `Topbar`, `Navbar`, `MegaMenu`, `ProductCard` compacte.
-5. Ajouter paiements (Stripe puis CMI), recherche (MeiliSearch), emails (Resend).
-6. Finaliser fidélité/recyclage/dropshipping selon le schéma documenté.
+- **Panier Nanostore + sync Supabase**: ❌ non appliqué.
+  - Panier Zustand local persist.
+- **Checkout Stripe + CMI**: ❌ non appliqué.
+- **Recherche avancée Meili/Algolia**: ❌ non appliqué.
+- **Emails transactionnels Resend**: ❌ non appliqué.
+- **Dropshipping automatique**: ❌ non appliqué.
+- **Programme fidélité complet (tiers/règles/notifications)**: ⚠️ partiellement appliqué côté UI/API uniquement.
+- **Recyclage avec upload storage et workflow complet**: ⚠️ partiellement appliqué.
+
+## 6) Production
+
+- **SEO/monitoring/performance pipeline (Sentry, image optimization cloud, etc.)**: ❌ majoritairement non appliqué.
+
+---
+
+## Ce qui est déjà en place (positif)
+
+- Base Astro fonctionnelle avec scripts dev/build/check/lint.
+- API backend structurée (auth, products, orders, recycling, profile, dashboard).
+- RBAC/auth middleware custom existants.
+- Header déjà proche du pattern computeruniverse (topbar + search + categories).
+
+---
+
+## Priorités recommandées (ordre pragmatique)
+
+1. **Décision d'architecture**: confirmer officiellement “migration vers Supabase” ou “doc adaptée à Prisma/JWT”.
+2. **Alignement SSR**: basculer `astro.config.mjs` vers `output: 'server'` + adapter node.
+3. **Refonte structure pages/components**: adopter les routes cibles (`catalogue`, `produit/[slug]`, `compte/*`, `admin/*`).
+4. **Système design compact**: remplacer styles premium (gros radius/spacing) par grille dense et cartes compactes.
+5. **Panier + auth selon cible**: Nanostores + sessions Supabase.
+6. **Paiement & search & email**: Stripe, CMI/PayZone, Meili/Algolia, Resend.
+7. **Features avancées**: fidélité complète, dropshipping, blog, notifications.
 
