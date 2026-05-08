@@ -22,7 +22,7 @@ const { id, slug, name, brand = 'STACKCORE', price, originalPrice, image = '/fav
     {isEco && <span class="rounded bg-[var(--cu-badge-eco)] px-1.5 py-0.5 text-[10px] text-white">♻️ ÉCO</span>}
   </div>
 
-  <a href={`/products?slug=${slug}`} class="block">
+  <a href={`/produit/${slug}`} class="block">
     <div class="flex h-[160px] items-center justify-center overflow-hidden p-2">
       <img src={image} alt={name} class="max-h-full max-w-full object-contain transition-transform group-hover:scale-105" loading="lazy" />
     </div>
