@@ -33,7 +33,7 @@ body {
   min-height: 100vh;
 }
 
-.glass {
+@utility glass {
   background: var(--color-surface);
   border: 1px solid color-mix(in oklab, white 35%, transparent);
   backdrop-filter: blur(14px);
